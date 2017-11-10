@@ -1,0 +1,35 @@
+#content {
+    width: 100%;
+    text-align: center;
+}
+
+canvas {
+    display: inline;
+    border: 1px solid black;
+    height: 720px;
+    width: 1280px;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: left;
+}
+
+ul {
+    text-align: center;
+}
+
+td {
+    width: 200px;
+}
+
+#loadingtext {
+    position:absolute;
+    top:250px;
+    left:150px;
+    font-size:2em;
+    color: white;
+}
