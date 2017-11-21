@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suk a dik</title>
+    <script src="lib/js/gl-matrix-min.js"></script>
+    <script src="lib/js/jquery-3.2.1.min.js"></script>
+    <script src="Renderer/ProgramManager.js"></script>
+    <script src="Stumps/Object3D.js"></script>
+    <script src="Stumps/Scene.js"></script>
+    <script src="Stumps/MeshObject.js"></script>
+    <script src="Stumps/Camera.js"></script>
+    <script src="Renderer/Renderer.js"></script>
+
+    <script id="phong_fragment" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
+    void main(void) {
+        gl_FragColor = vColor;
+    }
+
+    </script>
+
+    <script id="phong_vertex" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        varying vec4 vColor;
+        void main(void) {
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+            vColor = aVertexColor;
+        }
+    </script>
+    
+    <script>
+        $(document).ready(function() {
+            let b = new Renderer($("#game_canvas")[0]);
+            program.attributes["aVertexPosition"].set(MeshObject.vertices, 3);
+        });
+    </script>
+</head>
+<body>
+<canvas id="game_canvas" width="1920" height="1080"></canvas>
+
+</body>
+</html>
