@@ -1,0 +1,31 @@
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-regular.otf);
+}
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-bold.otf);
+	font-weight:bold;
+}
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-italic.otf);
+	font-style:italic;
+}
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-italic.otf);
+	font-style:oblique;
+}
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-bold_italic.otf);
+	font-weight:bold;
+	font-style:italic;
+}
+@font-face {
+    font-family:"Archivo Narrow";
+    src:url(../otf/archivo_narrow-bold_italic.otf);
+	font-weight:bold;
+	font-style:oblique;
+}
