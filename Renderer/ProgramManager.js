@@ -18,7 +18,7 @@ class ProgramManager {
     }
 
     getProgram(program_meta) {
-        if (this.compiledPrograms.hasOwnProperty(program_meta)) {
+        if (!this.compiledPrograms.hasOwnProperty(program_meta)) {
             throw "Could not find requested program."
         }
 

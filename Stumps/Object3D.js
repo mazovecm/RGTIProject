@@ -2,7 +2,7 @@
 class Object3D {
 
     constructor() {
-        this.modelMatrix = mat4.create();
+        this.model_matrix = mat4.create();
         this.children = [];
     }
 }

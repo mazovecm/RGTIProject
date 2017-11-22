@@ -2,41 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Suk a dik</title>
+    <title>Temp</title>
     <script src="lib/js/gl-matrix-min.js"></script>
     <script src="lib/js/jquery-3.2.1.min.js"></script>
     <script src="Renderer/ProgramManager.js"></script>
+    <script src="Renderer/AttributeManager.js"></script>
     <script src="Stumps/Object3D.js"></script>
+    <script src="Stumps/Light.js"></script>
+    <script src="Stumps/PointLight.js"></script>
+    <script src="Stumps/DirectionalLight.js"></script>
     <script src="Stumps/Scene.js"></script>
     <script src="Stumps/MeshObject.js"></script>
     <script src="Stumps/Camera.js"></script>
+
     <script src="Renderer/Renderer.js"></script>
 
-    <script id="phong_fragment" type="x-shader/x-fragment">
-    precision mediump float;
-    varying vec4 vColor;
-    void main(void) {
-        gl_FragColor = vColor;
-    }
+    <script id="phong_fragment" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        // From vertex shader
+        //in vec3 frag_normal;
+        in vec3 frag_position;
+
+        out vec4 color;
+
+        void main() {
+            //vec3 normal = normalize(frag_normal);
+            //vec3 viewDir = normalize(-frag_position);
+
+            color = vec4(1.0, 0.0, 0.0, 1.0);
+        }
 
     </script>
 
-    <script id="phong_vertex" type="x-shader/x-vertex">
-        attribute vec3 aVertexPosition;
-        attribute vec4 aVertexColor;
-        uniform mat4 uMVMatrix;
-        uniform mat4 uPMatrix;
-        varying vec4 vColor;
-        void main(void) {
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-            vColor = aVertexColor;
+    <script id="phong_vertex" type="x-shader/x-vertex">#version 300 es
+        precision mediump float;
+
+        uniform mat4 mvmat; // Model View Matrix
+        uniform mat4 pmat;  // Projection Matrix
+        uniform mat3 nmat;  // Normal Matrix
+
+        in vec3 position;       // Vertex position
+        //in vec3 normal;      // Vertex normal
+
+        // Output transformed vertex position and normal
+        out vec3 frag_position;
+        out vec3 frag_normal;
+
+        void main() {
+            // Model view position
+            vec4 position_h = mvmat * vec4(position, 1.0);
+
+            // Projected position
+            gl_Position = pmat * position_h;
+
+            frag_position = vec3(position_h) / position_h.w;
+            // Transform normals
+            //frag_normal = vec3(nmat * normal);
         }
     </script>
     
     <script>
+        let renderer;
+        let scene;
+        let camera;
+
+        function tick() {
+            requestAnimationFrame(tick);
+            renderer.render(scene, camera);
+        }
+
         $(document).ready(function() {
-            let b = new Renderer($("#game_canvas")[0]);
-            program.attributes["aVertexPosition"].set(MeshObject.vertices, 3);
+            renderer = new Renderer($("#game_canvas")[0]);
+            scene = new Scene();
+            scene.children.push(new MeshObject());
+            mat4.translate(scene.children[0].model_matrix, scene.children[0].model_matrix, [0, 0, 0]);
+            camera = new Camera();
+            mat4.translate(camera.model_matrix, camera.model_matrix, [0, 0, 20]);
+            tick();
         });
     </script>
 </head>
