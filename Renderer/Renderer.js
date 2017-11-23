@@ -31,9 +31,8 @@ class Renderer {
             throw WebGLDebugUtils.glEnumToString(err) + " was caused by call to: " + funcName;
         }
 
-        // this._gl = canvas.getContext("webgl2");
         this._gl = context;
-        this._gl = WebGLDebugUtils.makeDebugContext(this._gl, throwOnGLError, logAndValidate);
+        // this._gl = WebGLDebugUtils.makeDebugContext(this._gl, throwOnGLError, logAndValidate);
 
         this._gl.enable(this._gl.DEPTH_TEST);
         this._gl.depthFunc(this._gl.LEQUAL);
