@@ -3,8 +3,10 @@ class MeshObject extends Object3D {
     constructor() {
         super(Object3D);
 
-        this.model_view_matrix = mat4.create();
-        this.normal_matrix = mat4.create();
+        this.model_view_matrix = new GLMath.Matrix4();
+        this.normal_matrix = new GLMath.Matrix3();
+
+        this.material = new PhongMaterial();
 
         this.program = Programs.PHONG;
 

@@ -2,7 +2,9 @@ Programs = {};
 
 Programs.PHONG = {
     vertex: "phong_vertex",
-    fragment: "phong_fragment"
+    fragment: "phong_fragment",
+    max_dir_lights: 10,
+    max_point_lights: 10
 };
 
 class ProgramManager {
