@@ -40,6 +40,7 @@ class Renderer {
 
         this._program_manager = new ProgramManager(this._gl);
         this._attribute_manager = new AttributeManager(this._gl);
+        this._texture_manager = new TextureManager(this._gl);
 
         this._dirLights = [];
         this._pointLights = [];
@@ -203,6 +204,11 @@ class Renderer {
         if (uniform_setter[shininess] !== undefined) {
             uniform_setter[shininess].set(object.material.shininess);
         }
+
+        const texture = prefix + ".texture";
+        if (uniform_setter[texture] !== undefined) {
+            uniform_setter[texture].set(this._texture_manager.getTexture(object.material.texture), 0);
+        }
     }
 
     _setAttributes(program, object) {
@@ -225,6 +231,10 @@ class Renderer {
                 case "color":
                     buffer = this._attribute_manager.getBuffer(object.colors);
                     attribute_setter.color.set(buffer, 4);
+                    break;
+                case "uv":
+                    buffer = this._attribute_manager.getBuffer(object.uv);
+                    attribute_setter.uv.set(buffer, 2);
                     break;
                 default:
                     throw "Unknown Attribute!";
@@ -279,6 +289,10 @@ class Renderer {
 
             if (object.indices) {
                 this._attribute_manager.updateBuffer(object.indices, this._gl.ELEMENT_ARRAY_BUFFER);
+            }
+
+            if (object.uv) {
+                this._attribute_manager.updateBuffer(object.uv, this._gl.ARRAY_BUFFER);
             }
         }
     }

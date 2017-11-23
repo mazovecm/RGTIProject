@@ -7,6 +7,13 @@ Programs.PHONG = {
     max_point_lights: 10
 };
 
+Programs.PHONG_TEX = {
+    vertex: "phong_tex_vertex",
+    fragment: "phong_tex_fragment",
+    max_dir_lights: 10,
+    max_point_lights: 10
+};
+
 class ProgramManager {
 
     constructor(gl) {

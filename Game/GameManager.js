@@ -1,5 +1,4 @@
 
-
 class GameManager {
 
     constructor(canvas) {
@@ -16,20 +15,41 @@ class GameManager {
         });
 
         this.scene = new Scene();
-        this.object = new MeshObject();
-        this.scene.add(this.object);
-        this.scene.add(new DirectionalLight("rgb(0, 150, 0)", 1, new GLMath.Vector3(0, 0, 1)));
-        this.plightA = new PointLight("rgb(255, 0, 0)", 1, 0, 250);
-        this.scene.add(this.plightA);
-        this.plightB = new PointLight("rgb(0, 0, 255)", 1, 0, 250);
-        this.scene.add(this.plightB);
+        this.player = new Player(this);
+        this.scene.add(this.player);
+        this.bird = new MeshObject();
+        this.player.add(this.bird);
 
+        this.scene.add(new DirectionalLight("rgb(255, 255, 255)", 0.6, new GLMath.Vector3(0, 0, 1)));
+        this.plightA = new PointLight("rgb(255, 255, 255)", 0.6, 0, 250);
+        this.scene.add(this.plightA);
+
+        this.plightB = new PointLight("rgb(255, 255, 255)", 0.6, 0, 250);
+        this.scene.add(this.plightB);
 
         this.camera = new Camera();
         this.scene.add(new AmbientLight("rgb(50, 50, 50)"));
         this.camera.translateZ(20);
 
         this.elapsed_time = 0;
+
+        this.loadLevel(3);
+    }
+
+    loadLevel(onfinished) {
+        let self = this;
+        OBJ.downloadMeshes({
+            'player': 'Models/LowPolyMan.obj', // located in the models folder on the server
+            'bird': 'Models/Bird.obj'
+        }, function(meshes) {
+            self.player.initModelData(meshes.player);
+            self.player.material.texture = new Image();
+            self.player.material.texture.src = 'Textures/LowPolyMan5eyes.png';
+
+            self.bird.initModelData(meshes.bird);
+            self.bird.material.texture = new Image();
+            self.bird.material.texture.src = 'Textures/bird.png';
+        });
     }
 
     update(dt) {
@@ -38,9 +58,7 @@ class GameManager {
         this.plightA.position.set(10 * Math.cos(this.elapsed_time), 0, 10 * Math.sin(this.elapsed_time));
         this.plightB.position.set(0, 10 * Math.sin(this.elapsed_time), 10 * Math.cos(this.elapsed_time));
 
-        this.object.rotateX(0.01);
-        this.object.rotateY(0.005);
-        this.object.position.set(5 * Math.sin(this.elapsed_time), 5 * Math.cos(this.elapsed_time), 0);
+        this.player.update(dt);
 
         this._renderer.render(this.scene, this.camera);
     }

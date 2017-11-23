@@ -8,134 +8,45 @@ class MeshObject extends Object3D {
 
         this.material = new PhongMaterial();
 
-        this.program = Programs.PHONG;
+        this.program = Programs.PHONG_TEX;
+
 
         this.vertices = {
             dirty: true,
-            data: new Float32Array([
-                // Front face
-                -1.0, -1.0,  1.0,
-                1.0, -1.0,  1.0,
-                1.0,  1.0,  1.0,
-                -1.0,  1.0,  1.0,
-
-                // Back face
-                -1.0, -1.0, -1.0,
-                -1.0,  1.0, -1.0,
-                1.0,  1.0, -1.0,
-                1.0, -1.0, -1.0,
-
-                // Top face
-                -1.0,  1.0, -1.0,
-                -1.0,  1.0,  1.0,
-                1.0,  1.0,  1.0,
-                1.0,  1.0, -1.0,
-
-                // Bottom face
-                -1.0, -1.0, -1.0,
-                1.0, -1.0, -1.0,
-                1.0, -1.0,  1.0,
-                -1.0, -1.0,  1.0,
-
-                // Right face
-                1.0, -1.0, -1.0,
-                1.0,  1.0, -1.0,
-                1.0,  1.0,  1.0,
-                1.0, -1.0,  1.0,
-
-                // Left face
-                -1.0, -1.0, -1.0,
-                -1.0, -1.0,  1.0,
-                -1.0,  1.0,  1.0,
-                -1.0,  1.0, -1.0])
+            data: new Float32Array([])
         };
 
         this.colors = {
             dirty: true,
-            data: new Float32Array([
-                1.0, 0.0, 0.0, 1.0,
-                1.0, 0.0, 0.0, 1.0,
-                1.0, 0.0, 0.0, 1.0,
-                1.0, 0.0, 0.0, 1.0,
-
-                1.0, 1.0, 0.0, 1.0,
-                1.0, 1.0, 0.0, 1.0,
-                1.0, 1.0, 0.0, 1.0,
-                1.0, 1.0, 0.0, 1.0,
-
-                0.0, 1.0, 0.0, 1.0,
-                0.0, 1.0, 0.0, 1.0,
-                0.0, 1.0, 0.0, 1.0,
-                0.0, 1.0, 0.0, 1.0,
-
-                1.0, 0.5, 0.5, 1.0,
-                1.0, 0.5, 0.5, 1.0,
-                1.0, 0.5, 0.5, 1.0,
-                1.0, 0.5, 0.5, 1.0,
-
-                1.0, 0.0, 1.0, 1.0,
-                1.0, 0.0, 1.0, 1.0,
-                1.0, 0.0, 1.0, 1.0,
-                1.0, 0.0, 1.0, 1.0,
-
-                0.0, 0.0, 1.0, 1.0,
-                0.0, 0.0, 1.0, 1.0,
-                0.0, 0.0, 1.0, 1.0,
-                0.0, 0.0, 1.0, 1.0
-            ])
+            data: new Float32Array([])
         };
 
         this.normals = {
             dirty: true,
-            data: new Float32Array([
-                // Front face
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-
-                // Back face
-                0.0, 0.0, -1.0,
-                0.0, 0.0, -1.0,
-                0.0, 0.0, -1.0,
-                0.0, 0.0, -1.0,
-
-                // Top face
-                0.0, 1.0, 0.0,
-                0.0, 1.0, 0.0,
-                0.0, 1.0, 0.0,
-                0.0, 1.0, 0.0,
-
-                // Bottom face
-                0.0, -1.0, 0.0,
-                0.0, -1.0, 0.0,
-                0.0, -1.0, 0.0,
-                0.0, -1.0, 0.0,
-
-                // Right face
-                1.0, 0.0, 0.0,
-                1.0, 0.0, 0.0,
-                1.0, 0.0, 0.0,
-                1.0, 0.0, 0.0,
-
-                // Left face
-                -1.0, 0.0, 0.0,
-                -1.0, 0.0, 0.0,
-                -1.0, 0.0, 0.0,
-                -1.0, 0.0, 0.0
-            ])
+            data: new Float32Array([])
         };
 
         this.indices = {
             dirty: true,
-            data: new Uint32Array([
-                0, 1, 2,      0, 2, 3,    // Front face
-                4, 5, 6,      4, 6, 7,    // Back face
-                8, 9, 10,     8, 10, 11,  // Top face
-                12, 13, 14,   12, 14, 15, // Bottom face
-                16, 17, 18,   16, 18, 19, // Right face
-                20, 21, 22,   20, 22, 23  // Left face
-            ])
+            data: new Uint32Array([])
         };
+
+        this.uv = {
+            dirty: true,
+            data: new Float32Array([])
+        }
+    }
+
+    initModelData(mesh) {
+        this.vertices.data = new Float32Array(mesh.vertices);
+        this.normals.data = new Float32Array(mesh.vertexNormals);
+        this.uv.data = new Float32Array(mesh.textures);
+        this.indices.data = new Uint32Array(mesh.indices);
+
+        this.vertices.dirty = true;
+        this.normals.dirty = true;
+        this.uv.dirty = true;
+        this.indices.dirty = true;
+
     }
 }
