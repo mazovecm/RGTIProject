@@ -1,6 +1,11 @@
 class Renderer {
 
-    constructor(canvas) {
+    constructor(webgl) {
+        let canvas, context;
+
+        canvas = webgl.canvas;
+        context = webgl.context;
+
         //this._gl = canvas.getContext("webgl2");
 
         function logGLCall(functionName, args) {
@@ -26,7 +31,8 @@ class Renderer {
             throw WebGLDebugUtils.glEnumToString(err) + " was caused by call to: " + funcName;
         }
 
-        this._gl = canvas.getContext("webgl2");
+        // this._gl = canvas.getContext("webgl2");
+        this._gl = context;
         this._gl = WebGLDebugUtils.makeDebugContext(this._gl, throwOnGLError, logAndValidate);
 
         this._gl.enable(this._gl.DEPTH_TEST);
