@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%; width: 100%; margin: 0;">
 <head>
     <meta charset="UTF-8">
     <title>Temp</title>
@@ -10,6 +10,7 @@
     <script src="Renderer/ProgramManager.js"></script>
     <script src="Renderer/AttributeManager.js"></script>
     <script src="Material/PhongMaterial.js"></script>
+    <script src="Game/GameManager.js"></script>
 
     <script src="SceneGraph/Object3D.js"></script>
     <script src="SceneGraph/Light.js"></script>
@@ -149,60 +150,16 @@
             frag_normal = vec3(nmat * normal);
         }
     </script>
-    
+
     <script>
-        let renderer;
-        let scene;
-        let object;
-        let camera;
-        let plightA;
-        let plightB;
-
-        let last_time = 0;
-        let dt = 0;
-        let elapsed = 0;
-
-        function tick() {
-            let time_now = new Date().getTime();
-            if (last_time !== 0) {
-                dt = time_now - last_time;
-            }
-            last_time = time_now;
-            elapsed += dt / 1000;
-
-            plightA.position.set(10 * Math.cos(elapsed), 0, 10 * Math.sin(elapsed));
-            plightB.position.set(0, 10 * Math.sin(elapsed), 10 * Math.cos(elapsed));
-
-            object.rotateX(0.01);
-            object.rotateY(0.005);
-            object.position.set(5 * Math.sin(elapsed), 0, 5 * Math.cos(elapsed));
-
-            renderer.render(scene, camera);
-            //mat4.rotate(camera.model_matrix, camera.model_matrix, Math.PI / 20, [0, 1, 0]);
-            requestAnimationFrame(tick);
-        }
 
         $(document).ready(function() {
-            renderer = new Renderer($("#game_canvas")[0]);
-            scene = new Scene();
-            object = new MeshObject();
-            scene.add(object);
-            scene.add(new DirectionalLight("rgb(0, 150, 0)", 1, new GLMath.Vector3(0, 0, 1)));
-            plightA = new PointLight("rgb(255, 0, 0)", 1, 0, 250);
-            scene.add(plightA);
-            plightB = new PointLight("rgb(0, 0, 255)", 1, 0, 250);
-            scene.add(plightB);
-
-
-            camera = new Camera();
-            camera.translateZ(20);
-            scene.add(new AmbientLight("rgb(50, 50, 50)"));
-            requestAnimationFrame(tick);
+            var a = new GameManager($("#game_canvas")[0]);
         });
     </script>
 </head>
-<body>
-<canvas id="game_canvas" width="1920" height="1080"></canvas>
+<body style="height: 100%; width: 100%; margin: 0;">
+<canvas id="game_canvas" style="width: 100%; height: 100%; position: absolute"></canvas>
 
 </body>
 </html>

@@ -1,3 +1,7 @@
+html {
+    height: 100%;
+}
+
 body {
     margin:0;
     padding:0;
@@ -5,12 +9,14 @@ body {
     font-family:'Archivo Narrow', sans-serif;
     font-size:14px;
     text-align:center;
+    height: 100%;
 }
 
 canvas {
     display:block;
-    width:100%;
     height:100%;
+    width: 100%;
+    position:absolute;
 }
 
 .frame {

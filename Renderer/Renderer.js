@@ -26,13 +26,15 @@ class Renderer {
             throw WebGLDebugUtils.glEnumToString(err) + " was caused by call to: " + funcName;
         }
 
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
         this._gl = canvas.getContext("webgl2");
-        this._gl = WebGLDebugUtils.makeDebugContext(this._gl, throwOnGLError, logAndValidate);
+        //this._gl = WebGLDebugUtils.makeDebugContext(this._gl, throwOnGLError, logAndValidate);
 
         this._gl.enable(this._gl.DEPTH_TEST);
         this._gl.depthFunc(this._gl.LEQUAL);
         this._gl.frontFace(this._gl.CCW);
-        this._gl.viewport(0, 0, canvas.width, canvas.height);
+        this._gl.viewport(0, 0, 1920, 1080);
         this._gl.clearColor(0, 0, 0, 1);
         this._gl.clearDepth(1);
 
@@ -43,6 +45,10 @@ class Renderer {
         this._pointLights = [];
         this._ambient = new GLMath.Color();
         this._mesh_objects = [];
+    }
+
+    updateViewport(width, height) {
+        this._gl.viewport(0, 0, width, height);
     }
 
     render(scene, camera) {

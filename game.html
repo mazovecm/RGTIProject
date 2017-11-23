@@ -8,13 +8,167 @@
         @import url("lib/css/typography.css");
         @import url("lib/css/game.css");
     </style>
+
+    <script src="lib/js/gl-matrix-min.js"></script>
+    <script src="lib/js/glmath.min.js"></script>
+    <script src="lib/js/jquery-3.2.1.min.js"></script>
+    <script src="lib/js/webgl-debug.js"></script>
+
+    <script src="Game/GameManager.js"></script>
+
+    <script src="Renderer/ProgramManager.js"></script>
+    <script src="Renderer/AttributeManager.js"></script>
+    <script src="Material/PhongMaterial.js"></script>
+
+    <script src="SceneGraph/Object3D.js"></script>
+    <script src="SceneGraph/Light.js"></script>
+    <script src="SceneGraph/AmbientLight.js"></script>
+    <script src="SceneGraph/PointLight.js"></script>
+    <script src="SceneGraph/DirectionalLight.js"></script>
+    <script src="SceneGraph/Scene.js"></script>
+    <script src="SceneGraph/MeshObject.js"></script>
+    <script src="SceneGraph/Camera.js"></script>
+
+    <script src="Game/Player.js"></script>
+
+    <script src="Renderer/Renderer.js"></script>
+
+    <script id="phong_fragment" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        #define MAX_DIR_LIGHTS 10
+        #define MAX_POINT_LIGHTS 10
+
+        struct DirectionalLight {
+            vec3 direction;
+            vec3 color;
+            float intensity;
+        };
+
+        struct PointLight {
+            vec3 position;
+            vec3 color;
+            float max_distance;
+            float decay;
+            float intensity;
+        };
+
+        uniform vec3 ambient;
+
+        uniform DirectionalLight dir_lights[MAX_DIR_LIGHTS];
+        uniform PointLight point_lights[MAX_POINT_LIGHTS];
+
+        struct Material {
+            vec3 diffuse_color;
+            vec3 specular_color;
+            float shininess;
+        };
+
+        uniform Material material;
+
+        // From vertex shader
+        in vec3 frag_normal;
+        in vec3 frag_position;
+
+        out vec4 color;
+
+        // Calculates the point light color contribution
+        vec3 calcPointLight (PointLight light, vec3 normal, vec3 view_dir) {
+
+            vec3 light_dir = normalize(light.position - frag_position);
+
+            // Difuse
+            float diffuse_f = max(dot(normal, light_dir), 0.0f);
+
+            // Specular
+            vec3 reflect_dir = reflect(-light_dir, normal);
+            float specular_f = pow(max(dot(view_dir, reflect_dir), 0.0f), material.shininess);
+
+            // Attenuation
+            float distance = length(light.position - frag_position);
+            float attenuation = 1.0f / (1.0f + 0.001f * distance + 0.0001f * (distance * distance));
+
+            // Combine results
+            vec3 diffuse  = light.color * diffuse_f * material.diffuse_color * attenuation;
+            vec3 specular = light.color * diffuse_f * material.specular_color * attenuation;
+
+            return (diffuse + specular);
+        }
+
+        vec3 calcDirectLight (DirectionalLight light, vec3 normal, vec3 view_dir) {
+
+            vec3 light_dir = normalize(light.direction);
+
+            // Difuse
+            float diffuse_f = max(dot(normal, light_dir), 0.0f);
+
+            // Specular
+            vec3 reflect_dir = reflect(-light_dir, normal);
+            float specular_f = pow(max(dot(view_dir, reflect_dir), 0.0f), material.shininess);
+
+            // Combine results
+            vec3 diffuse  = light.color  * diffuse_f * material.diffuse_color;
+            vec3 specular = light.color * specular_f * material.specular_color;
+
+            return (diffuse + specular);
+        }
+
+
+        void main() {
+            vec3 normal = normalize(frag_normal);
+            vec3 view_dir = normalize(-frag_position);
+
+            // Calculate combined light contribution
+            //vec3 combined = ambient;
+            vec3 combined = vec3(0.0, 0.0, 0.0);
+
+            for (int i = 0; i < MAX_DIR_LIGHTS; i++) {
+                combined += calcDirectLight(dir_lights[i], normal, view_dir);
+            }
+            for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
+                combined += calcPointLight(point_lights[i], normal, view_dir);
+            }
+
+            color = vec4(combined, 1.0);
+        }
+
+    </script>
+    <script id="phong_vertex" type="x-shader/x-vertex">#version 300 es
+        precision mediump float;
+
+        uniform mat4 mvmat; // Model View Matrix
+        uniform mat4 pmat;  // Projection Matrix
+        uniform mat3 nmat;  // Normal Matrix
+
+        in vec3 position;       // Vertex position
+        in vec3 normal;      // Vertex normal
+
+        // Output transformed vertex position and normal
+        out vec3 frag_position;
+        out vec3 frag_normal;
+
+        void main() {
+            // Model view position
+            vec4 position_h = mvmat * vec4(position, 1.0);
+
+            // Projected position
+            gl_Position = pmat * position_h;
+
+            frag_position = vec3(position_h) / position_h.w;
+            // Transform normals
+            frag_normal = vec3(nmat * normal);
+        }
+    </script>
+
     <script src="lib/js/jquery-3.2.1.min.js"></script>
     <script src="lib/js/gl-matrix-2.4.0.min.js"></script>
-    <script src="lib/js/rgti_class-webgl.js"></script>
     <script src="lib/js/rgti_class-geometry.js"></script>
     <script src="lib/js/rgti_helpers.js"></script>
     <script src="lib/js/rgti_i18n.js"></script>
     <script src="lib/js/rgti.js"></script>
 </head>
-<body></body>
+<body>
+    <canvas id="canvas"></canvas>
+
+</body>
 </html>
