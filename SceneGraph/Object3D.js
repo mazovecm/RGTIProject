@@ -64,7 +64,7 @@ class Object3D {
     remove(object) {
         let index = this.children.indexOf(object);
         if (index !== -1) {
-            object._parent = null;
+            object.parent = null;
             this.children.splice(index, 1);
         }
     }

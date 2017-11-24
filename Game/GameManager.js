@@ -14,6 +14,8 @@ class GameManager {
             self.camera.aspect = canvas.clientWidth / canvas.clientHeight;
         });
 
+        this.input_manager = InputManager.instance;
+        this.camera_locked = false;
 
         this.scene = new Scene();
 
@@ -28,17 +30,23 @@ class GameManager {
         this.floor.scale = new GLMath.Vector3(100, 100, 100);
         this.floor.translateY(-4);
 
-        this.scene.add(new DirectionalLight("rgb(255, 255, 255)", 0.6, new GLMath.Vector3(0, 0, 1)));
+        this.scene.add(new DirectionalLight("rgb(255, 255, 255)", 0.5, new GLMath.Vector3(0, 0, 1)));
+
         this.plightA = new PointLight("rgb(255, 255, 255)", 0.6, 0, 250);
         this.scene.add(this.plightA);
+        this.plightA.translateZ(40);
+
         this.plightB = new PointLight("rgb(255, 255, 255)", 0.6, 0, 250);
         this.scene.add(this.plightB);
+        this.plightB.translateZ(40);
+
         this.scene.add(new AmbientLight("rgb(50, 50, 50)"));
 
         this.camera = new Camera();
-        this.camera.translateZ(40);
-        this.camera.translateY(30);
-        this.camera.rotateX(-Math.PI/5);
+        this.camera.translateZ(50);
+        this.camera.translateY(40);
+        this.camera.rotateX(-Math.PI/4.5);
+        //this.player.add(this.camera);
 
         this.elapsed_time = 0;
 
@@ -69,12 +77,31 @@ class GameManager {
     update(dt) {
         this.elapsed_time += dt / 1000;
 
-        this.plightA.position.set(10 * Math.cos(this.elapsed_time), 0, 10 * Math.sin(this.elapsed_time));
-        this.plightB.position.set(0, 10 * Math.sin(this.elapsed_time), 10 * Math.cos(this.elapsed_time));
+        //this.plightA.position.set(10 * Math.cos(this.elapsed_time), 0, 10 * Math.sin(this.elapsed_time));
+        //this.plightB.position.set(0, 10 * Math.sin(this.elapsed_time), 10 * Math.cos(this.elapsed_time));
 
         this.player.update(dt);
+        this.lockCamera();
 
         this._renderer.render(this.scene, this.camera);
+    }
+
+    lockCamera() {
+        let input_set = this.input_manager.getPressedKeys();
+
+        if (input_set.has(76)) {
+            if (this.camera_locked === false) {
+                this.player.add(this.camera);
+                this.camera_locked = true;
+                input_set.delete(76);
+            }
+            else {
+                this.player.remove(this.camera);
+                this.camera_locked = false;
+                input_set.delete(76);
+            }
+        }
+
     }
 
 }
